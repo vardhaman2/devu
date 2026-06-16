@@ -1,7 +1,7 @@
 export const PAGE_IMAGES = {
-  letter: "/images/letter-bg.png",
-  apology: "/images/apology-bg.png",
-  meter: "/images/meter-bg.png",
-  question: "/images/question-bg.png",
-  forgiven: "/images/forgiven-bg.png",
+  letter: "/devu/images/letter-bg.png",
+  apology: "/devu/images/apology-bg.png",
+  meter: "/devu/images/meter-bg.png",
+  question: "/devu/images/question-bg.png",
+  forgiven: "/devu/images/forgiven-bg.png",
 } as const;
