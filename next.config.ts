@@ -1,13 +1,12 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',      // Tells Next.js to export static HTML
+  output: 'export',      
   images: {
-    unoptimized: true, // Required for static export on GitHub Pages
+    unoptimized: true,   
   },
-  // If your GitHub Pages URL looks like https://username.github.io/repository-name
-  // uncomment the line below and replace 'repository-name' with your actual repo name:
-  // basePath: '/repository-name', 
+  basePath: '/devu',     
+  trailingSlash: true,   // CRITICAL: Changes /feed to /feed/index.html for GitHub Pages compatibility
 };
 
 export default nextConfig;
