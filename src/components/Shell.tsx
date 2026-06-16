@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 import { REVEAL_DELAY_MS, RevealProvider } from "./RevealContext";
 
 const steps = [
-  { href: "/letter", label: "Letter" },
-  { href: "/feed", label: "Apology" },
-  { href: "/meter", label: "Meter" },
-  { href: "/question", label: "Question" },
+  { href: "/letter/", label: "Letter" }, // Added trailing slashes to match deployment paths
+  { href: "/feed/", label: "Apology" },
+  { href: "/meter/", label: "Meter" },
+  { href: "/question/", label: "Question" },
 ];
 
 export function Shell({
@@ -31,12 +31,19 @@ export function Shell({
     return () => window.clearTimeout(timer);
   }, [pathname]);
 
+  // HELPER FUNCTION: Injects the /devu subfolder prefix dynamically if it's missing
+  const getCleanAssetPath = (src: string | undefined) => {
+    if (!src) return "";
+    if (src.startsWith("http") || src.startsWith("data:")) return src;
+    return src.startsWith("/devu") ? src : `/devu${src}`;
+  };
+
   return (
     <div className="relative min-h-screen">
       {backgroundImage ? (
         <div aria-hidden className="pointer-events-none fixed inset-0 z-0">
           <img
-            src={backgroundImage}
+            src={getCleanAssetPath(backgroundImage)} // Modified to catch background updates
             alt=""
             className="absolute inset-0 h-full w-full scale-105 object-cover blur-[1.7px] saturate-[0.88]"
           />
@@ -57,42 +64,43 @@ export function Shell({
           style={{ pointerEvents: revealed ? "auto" : "none" }}
           aria-hidden={!revealed}
         >
-        <header className="mx-auto flex w-full max-w-[550px] items-center justify-between px-5 pt-6">
-          <div className="flex items-center gap-2 text-xs tracking-[0.24em] text-[color:var(--muted)]">
-            <span className="text-sm">🌹</span>
-            <span>PREPARED WITH LOVE,<br /> FOR MY BABY</span>
-          </div>
+          <header className="mx-auto flex w-full max-w-[550px] items-center justify-between px-5 pt-6">
+            <div className="flex items-center gap-2 text-xs tracking-[0.24em] text-[color:var(--muted)]">
+              <span className="text-sm">🌹</span>
+              <span>PREPARED WITH LOVE,<br /> FOR MY BABY</span>
+            </div>
 
-          <nav className="hidden items-center gap-2 sm:flex">
-            {steps.map((s) => {
-              const active = pathname === s.href;
-              return (
-                <Link
-                  key={s.href}
-                  href={s.href}
-                  className={[
-                    "rounded-full px-3 py-1 text-xs transition",
-                    active
-                      ? "bg-black/5 text-[color:var(--fg)]"
-                      : "text-[color:var(--muted)] hover:bg-black/5 hover:text-[color:var(--fg)]",
-                  ].join(" ")}
-                >
-                  {s.label}
-                </Link>
-              );
-            })}
-          </nav>
-        </header>
+            <nav className="hidden items-center gap-2 sm:flex">
+              {steps.map((s) => {
+                // Safely checks path match patterns for highlighting nav elements
+                const active = pathname === s.href || pathname === s.href.replace(/\/$/, "");
+                return (
+                  <Link
+                    key={s.href}
+                    href={s.href}
+                    className={[
+                      "rounded-full px-3 py-1 text-xs transition",
+                      active
+                        ? "bg-black/5 text-[color:var(--fg)]"
+                        : "text-[color:var(--muted)] hover:bg-black/5 hover:text-[color:var(--fg)]",
+                    ].join(" ")}
+                  >
+                    {s.label}
+                  </Link>
+                );
+              })}
+            </nav>
+          </header>
 
-        <main className="mx-auto w-full max-w-[520px] px-5 pb-10 pt-10">
-          {children}
-        </main>
+          <main className="mx-auto w-full max-w-[520px] px-5 pb-10 pt-10">
+            {children}
+          </main>
 
-        {footer ? (
-          <footer className="mx-auto w-full max-w-[520px] px-5 pb-10">
-            {footer}
-          </footer>
-        ) : null}
+          {footer ? (
+            <footer className="mx-auto w-full max-w-[520px] px-5 pb-10">
+              {footer}
+            </footer>
+          ) : null}
         </motion.div>
       </RevealProvider>
     </div>
